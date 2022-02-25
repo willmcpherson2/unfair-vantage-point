@@ -1,0 +1,12 @@
+*
+*/*
+
+!.gitignore
+!Cargo.lock
+!Cargo.toml
+!LICENSE
+!Makefile.toml
+!README.md
+!index.html
+!src
+!src/**

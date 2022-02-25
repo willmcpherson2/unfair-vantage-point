@@ -1,0 +1,57 @@
+# Native
+
+[tasks.run]
+run_task = { name = ["watch-native"] }
+
+[tasks.watch-native]
+run_task = { name = ["run-native"] }
+watch = { watch = ["./"] }
+dependencies = ["install-cargo-watch"]
+
+[tasks.run-native]
+command = "cargo"
+args = ["run"]
+
+# Web
+
+[tasks.web]
+run_task = { name = ["serve", "watch-web"], parallel = true }
+
+[tasks.serve]
+command = "basic-http-server"
+dependencies = ["install-basic-http-server"]
+
+[tasks.watch-web]
+run_task = { name = ["wasm-bindgen", "open"] }
+watch = { watch = ["./"] }
+dependencies = ["install-cargo-watch"]
+
+[tasks.wasm-bindgen]
+command = "wasm-bindgen"
+args = ["--out-dir", "target", "--target", "web", "target/wasm32-unknown-unknown/debug/unfair-vantage-point.wasm"]
+dependencies = ["install-wasm-bindgen-cli", "build-web"]
+
+[tasks.open]
+command = "open"
+args = ["-g", "http://127.0.0.1:4000"]
+
+[tasks.build-web]
+command = "cargo"
+args = ["build", "--target", "wasm32-unknown-unknown", "--no-default-features"]
+dependencies = ["install-wasm32-unknown-unknown"]
+
+# Dependencies
+
+[tasks.install-cargo-watch]
+install_crate = { crate_name = "cargo-watch", binary = "cargo-watch" }
+
+[tasks.install-basic-http-server]
+install_crate = { crate_name = "basic-http-server", binary = "basic-http-server", test_arg = "--help" }
+
+[tasks.install-wasm-bindgen-cli]
+command = "cargo"
+args = ["install", "wasm-bindgen-cli"]
+
+[tasks.install-wasm32-unknown-unknown]
+command = "rustup"
+args = ["target", "install", "wasm32-unknown-unknown"]
